@@ -6,7 +6,21 @@ team = [];
 
 // questions 
 const employeeQuestions = () => {
+    console.log(`
+        ===================
+        ADDING NEW EMPLOYEE
+        ===================
+    `)
     return inquirer.prompt ([
+        {
+            type: 'list',
+            name: 'role',
+            message: `What is this employee's role?`,
+            choices: [
+                'Engineer',
+                'Intern'
+            ]
+        },
         {
             type: 'input',
             name: 'name',
@@ -47,33 +61,57 @@ const employeeQuestions = () => {
             }
         },
         {
-            type: 'list',
-            name: 'role',
-            message: `What is the employee's role?`,
-            choices: [
-                'Manager',
-                'Engineer',
-                'Intern'
-            ]
+            type: 'input',
+            name: 'github',
+            message: `What is the employee's Github username?`,
+            when: (input) => input.role === "Engineer",
+            validate: nameInput => {
+                if (nameInput ) {
+                    return true;
+                } else {
+                    console.log ("Please enter the employee's github username.")
+                }
+            }
+        },
+        {
+            type: 'input',
+            name: 'school',
+            message: `Which school is the employee attending?`,
+            when: (input) => input.role === "Intern",
+            validate: nameInput => {
+                if (nameInput) {
+                    return true;
+                } else {
+                    console.log ("Please enter the employee's school.")
+                }
+            }
+        },
+        {
+            type: 'confirm',
+            name: 'confirmAddEmployee',
+            message: `Would you like to add another employee?`,
+            default: false
         }
     ])
-}
+    .then(employeeData => {
+        let { name, id, email, role, github, school, confirmAddEmployee } = employeeData;
+        let employee;
 
-// questions to determine role of next employee input
-const roleDecision = () => {
-    inquirer.prompt(employeeQuestions).then((answers) => {
-        if 
-        (answers.employee === 'Manager') {
-            managerQuestions();
-        } else if 
-        (answers.employee === 'Engineer') {
-            engineerQuestions();
-        } else if 
-        (answers.employee === 'Intern') {
-            internQuestions();
+        if (role === "Engineer") {
+            employee = new Engineer (name, id, email, github);
+        } else if (role === "Intern") {
+            employee = new Intern (name, id, email, school);
+        }
+        team.push(employee);
+
+        if (confirmAddEmployee) {
+            return employeeQuestions(team);
+        } else {
+            return team;
         }
     })
 }
+
 
 // first prompt, answers questions about manager
 const managerQuestions = () => {
@@ -131,21 +169,15 @@ const managerQuestions = () => {
             }
         }
     ])
-}
+    .then(managerData => {
+        const { name, id, email, office } = managerData;
+        const manager = new Manager (name, id, email, office);
 
-// prompt to see if there are additional employees to be added
-const addEmployee = () => {
-    return inquirer.prompt (
-        {
-            type: 'confirm',
-            name: 'plusEmployee',
-            message: 'Would you like to add another employee?',
-            default: false
-        },
-        
-    )
+        team.push(manager);
+    })
+    
 }
 
 // initializes app and begins inquirer prompt
 managerQuestions()
-    .then(addEmployee);
+    .then(employeeQuestions);
