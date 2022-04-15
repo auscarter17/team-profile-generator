@@ -5,3 +5,5 @@ test ('creates a manager object', () => {
 
     expect (manager.office).toEqual(expect.any(Number));
 });
+
+test ('gets office number from manager');
