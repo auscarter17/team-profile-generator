@@ -1,13 +1,17 @@
+// provides functionality for inquirer and fs to present prompts and create/copy files
 const inquirer = require('inquirer');
 const fs = require('fs');
+
+// brings in JS from files corresponding to role of employee being made
 const Manager = require('./lib/Manager');
 const Engineer = require('./lib/Engineer');
 const Intern = require('./lib/Intern');
 const generateTeam = require('./src/page-template')
+
 // array to store members of team
 team = [];
 
-// questions 
+// questions to determine type of employee and ask corresponding questions
 const employeeQuestions = () => {
     console.log(`
         ===================
@@ -90,12 +94,14 @@ const employeeQuestions = () => {
             }
         },
         {
+            // asks if another employee is to be added
             type: 'confirm',
             name: 'confirmAddEmployee',
             message: `Would you like to add another employee?`,
             default: false
         }
     ])
+    // takes each employee by role and deconstructs parameters based on role
     .then(employeeData => {
         let { name, id, email, role, github, school, confirmAddEmployee } = employeeData;
         let employee;
@@ -107,6 +113,7 @@ const employeeQuestions = () => {
         }
         team.push(employee);
 
+        // if user needs to add more employees, will return to beginning of prompts
         if (confirmAddEmployee) {
             return employeeQuestions(team);
         } else {
@@ -172,6 +179,7 @@ const managerQuestions = () => {
             }
         }
     ])
+    // adds manager to array and deconstructs parameters
     .then(managerData => {
         const { name, id, email, office } = managerData;
         const manager = new Manager (name, id, email, office);
@@ -181,6 +189,7 @@ const managerQuestions = () => {
     
 }
 
+// writes index.html file with information provided by user
 const writeFile = fileContent => {
     return new Promise((resolve, reject) => {
         fs.writeFile('./dist/index.html', fileContent, err => {
@@ -197,6 +206,7 @@ const writeFile = fileContent => {
     });
 };
 
+// copies stylesheet from src folder and adds in dist folder with index.html
 const copyFile = () => {
     return new Promise((resolve, reject) => {
         fs.copyFile('./src/style.css', './dist/style.css', err => {

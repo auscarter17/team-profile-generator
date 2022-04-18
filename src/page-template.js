@@ -1,3 +1,4 @@
+// generates card for manager to be pushed into html body
 const managerCard = function(manager) {
     return `
     <div class="col-4">
@@ -17,6 +18,7 @@ const managerCard = function(manager) {
     `;
 }
 
+// generates card for engineers
 const engineerCard = function(engineer) {
     return `
     <div class="col-4">
@@ -36,6 +38,7 @@ const engineerCard = function(engineer) {
     `;
 }
 
+// generates card for interns
 const internCard = function(intern) {
     return `
     <div class="col-4">
@@ -55,6 +58,7 @@ const internCard = function(intern) {
     `
 }
 
+// loops through employees and sorts them by role
 generateTeam = (data) => {
     pageArray = [];
 
@@ -77,13 +81,15 @@ generateTeam = (data) => {
             pageArray.push(makeInternCard)
         }
     }
-
+    // creates array to store employees with card elements
     const staffCards = pageArray.join('')
 
+    // takes array of cards and runs them through function to generate full page
     const generateTeam = generatePage (staffCards);
     return generateTeam;
 }
 
+// creates layout for index.html that will house staff cards
 const generatePage = function (staffCards) {
     return `
     <!DOCTYPE html>
