@@ -1,0 +1,25 @@
+:root {
+    --background: #492C1D;
+    --header-color: #8EB8E5;
+    --card-background: #7C99B4;
+}
+
+body {
+    background-color: var(--background);
+}
+
+header {
+    background-color: var(--header-color);
+}
+
+.card {
+    margin: 10px;
+}
+
+.card-header {
+    background-color: var(--card-background);
+}
+
+.card-body {
+    background-color: var(--card-background);
+}
